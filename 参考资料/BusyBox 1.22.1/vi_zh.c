@@ -49,7 +49,7 @@
 //config:	  If your terminal combines several 8-bit bytes into one character
 //config:	  (as in Unicode mode), this will not work properly.
 //config:
-//config:config FEATURE_VI_COLON
+//config:config FEATURE_VI_COLON // 冒号命令
 //config:	bool "Enable \":\" colon commands (no \"ex\" mode)"
 //config:	default y
 //config:	depends on VI
@@ -57,7 +57,7 @@
 //config:	  Enable a limited set of colon commands for vi. This does not
 //config:	  provide an "ex" mode.
 //config:
-//config:config FEATURE_VI_YANKMARK
+//config:config FEATURE_VI_YANKMARK // 复制 粘贴
 //config:	bool "Enable yank/put commands and mark cmds"
 //config:	default y
 //config:	depends on VI
@@ -156,14 +156,14 @@
 #include "libbb.h"
 /* Should be after libbb.h: on some systems regex.h needs sys/types.h: */
 #if ENABLE_FEATURE_VI_REGEX_SEARCH
-# include <regex.h>
+# include <regex.h> // 正则匹配
 #endif
 
 /* the CRASHME code is unmaintained, and doesn't currently build */
 #define ENABLE_FEATURE_VI_CRASHME 0
 
 
-#if ENABLE_LOCALE_SUPPORT
+#if ENABLE_LOCALE_SUPPORT // 本地语言支持
 
 #if ENABLE_FEATURE_VI_8BIT
 //FIXME: this does not work properly for Unicode anyway
@@ -176,7 +176,7 @@
 
 /* 0x9b is Meta-ESC */
 #if ENABLE_FEATURE_VI_8BIT
-# define Isprint(c) ((unsigned char)(c) >= ' ' && (c) != 0x7f && (unsigned char)(c) != 0x9b)
+# define Isprint(c) ((unsigned char)(c) >= ' ' && (c) != 0x7f && (unsigned char)(c) != 0x9b) // 判断可打印字符
 #else
 # define Isprint(c) ((unsigned char)(c) >= ' ' && (unsigned char)(c) < 0x7f)
 #endif
@@ -194,34 +194,34 @@ enum {
 	MAX_SCR_ROWS = CONFIG_FEATURE_VI_MAX_LEN,
 };
 
-/* VT102 ESC sequences.
+/* VT102 ESC sequences. // 控制终端代码 -- Linux 控制终端转义和控制序列
  * See "Xterm Control Sequences"
  * http://invisible-island.net/xterm/ctlseqs/ctlseqs.html
  */
 /* Inverse/Normal text */
-#define ESC_BOLD_TEXT "\033[7m"
-#define ESC_NORM_TEXT "\033[0m"
+#define ESC_BOLD_TEXT "\033[7m" // 反显
+#define ESC_NORM_TEXT "\033[0m" // 关闭所有属性
 /* Bell */
 #define ESC_BELL "\007"
 /* Clear-to-end-of-line */
-#define ESC_CLEAR2EOL "\033[K"
+#define ESC_CLEAR2EOL "\033[K" // 清除从光标到行尾的内容
 /* Clear-to-end-of-screen.
  * (We use default param here.
  * Full sequence is "ESC [ <num> J",
  * <num> is 0/1/2 = "erase below/above/all".)
  */
-#define ESC_CLEAR2EOS "\033[J"
+#define ESC_CLEAR2EOS "\033[J" // \033[2J 清屏
 /* Cursor to given coordinate (1,1: top left) */
-#define ESC_SET_CURSOR_POS "\033[%u;%uH"
+#define ESC_SET_CURSOR_POS "\033[%u;%uH" // \033[y;xH 设置光标位置
 //UNUSED
 ///* Cursor up and down */
-//#define ESC_CURSOR_UP "\033[A"
-//#define ESC_CURSOR_DOWN "\n"
+//#define ESC_CURSOR_UP "\033[A" // \033[nA 光标上移n行
+//#define ESC_CURSOR_DOWN "\n" // \033[nB 光标下移n行
 
-#if ENABLE_FEATURE_VI_DOT_CMD || ENABLE_FEATURE_VI_YANKMARK
+#if ENABLE_FEATURE_VI_DOT_CMD || ENABLE_FEATURE_VI_YANKMARK // 记录上一条命令 || 复制 粘贴
 // cmds modifying text[]
-// vda: removed "aAiIs" as they switch us into insert mode
-// and remembering input for replay after them makes no sense
+// vda: removed "aAiIs" as they switch us into insert mode // 删除 "aAiIs", 因为它们用来转换模式，进入插入模式
+// and remembering input for replay after them makes no sense // 记录并重复它们没有意义
 static const char modifying_cmds[] = "cCdDJoOpPrRxX<>~";
 #endif
 
@@ -230,8 +230,8 @@ enum {
 	YANKDEL = TRUE,
 	FORWARD = 1,	// code depends on "1"  for array index
 	BACK = -1,	// code depends on "-1" for array index
-	LIMITED = 0,	// how much of text[] in char_search
-	FULL = 1,	// how much of text[] in char_search
+	LIMITED = 0,	// how much of text[] in char_search // 搜索字符串长度
+	FULL = 1,	// how much of text[] in char_search // 搜索数量 ?
 
 	S_BEFORE_WS = 1,	// used in skip_thing() for moving "dot"
 	S_TO_WS = 2,		// used in skip_thing() for moving "dot"
@@ -253,10 +253,10 @@ struct globals {
 
 	/* the rest */
 	smallint vi_setops;
-#define VI_AUTOINDENT 1
-#define VI_SHOWMATCH  2
-#define VI_IGNORECASE 4
-#define VI_ERR_METHOD 8
+#define VI_AUTOINDENT 1 // 自动缩进
+#define VI_SHOWMATCH  2 // 括号匹配模式
+#define VI_IGNORECASE 4 // 忽略大小写
+#define VI_ERR_METHOD 8 // 错误提示方式
 #define autoindent (vi_setops & VI_AUTOINDENT)
 #define showmatch  (vi_setops & VI_SHOWMATCH )
 #define ignorecase (vi_setops & VI_IGNORECASE)
@@ -285,7 +285,7 @@ struct globals {
 #if ENABLE_FEATURE_VI_ASK_TERMINAL
 	int get_rowcol_error;
 #endif
-	int crow, ccol;          // cursor is on Crow x Ccol
+	int crow, ccol;          // cursor is on Crow x Ccol // 当前光标位置
 	int offset;              // chars scrolled off the screen to the left
 	int have_status_msg;     // is default edit status needed?
 	                         // [don't make smallint!]
