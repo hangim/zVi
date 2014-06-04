@@ -13,13 +13,15 @@ struct String {
 void String_test();
 struct String * String_create_node(char const *buf);
 struct String * String_create (char const *buf);
+void String_output(struct String * string);
+void String_clear (struct String * string);
 void String_destory (struct String * string);
 
 
 
 struct Line_node {
     int index;
-    // TODO data
+    struct String *string;
     struct Line_node *next;
 };
 
@@ -29,6 +31,7 @@ struct Line {
 };
 
 struct Line_node * Line_create_node();
+void Line_set_string(struct Line_node *node, char const *buf);
 struct Line * Line_create();
 struct Line_node * Line_get_node_by_index(struct Line *line, int pos);
 void Line_insert(struct Line *line, struct Line_node *node, int pos);
@@ -38,16 +41,20 @@ void Line_delete(struct Line *line, int pos);
 
 int main(int argc, char const *argv[]) {
 
+    char buf[] = "code is poetry!\n";
+
     struct Line *line = Line_create();
 
     for (int i = 0; i < 10; i++) {
         struct Line_node *node = Line_create_node();
+        Line_set_string(node, buf);
         Line_insert(line, node, 0);
     }
     
     struct Line_node *p = line->head;
     while (p->next) {
-        printf("%d\n", p->next->index);
+        printf("%2d: ", p->next->index);
+        String_output(p->next->string);
         p = p->next;
     }
 
@@ -118,6 +125,30 @@ struct String * String_create (char const *buf) {
     return head;
 }
 
+void String_output(struct String * string) {
+    if (string == NULL)
+        return;
+
+    struct String *p = string;
+
+    while (p->next) {
+        printf("%s", p->next->s);
+        p = p->next;
+    }
+}
+
+void String_clear (struct String * head) {
+    struct String *p, *q;
+    p = q = head->next;
+    while (p) {
+        q = p->next;
+        free(p->s);
+        free(p);
+        p = q;
+    }
+    head->next = NULL;
+}
+
 void String_destory (struct String * string) {
     if (string == NULL)
         return;
@@ -125,7 +156,8 @@ void String_destory (struct String * string) {
     struct String  *p, *q;
     p = q = string;
     while (p) {
-        q = q->next;
+        q = p->next;
+        free(p->s);
         free(p);
         p = q;
     }
@@ -138,10 +170,18 @@ struct Line_node * Line_create_node() {
     if (node == NULL)
         ; // TODO
 
+    node->string = NULL;
     node->index = 0; // TODO
     node->next = NULL;
 
     return node;
+}
+
+void Line_set_string(struct Line_node *node, char const *buf) {
+    if (node->string != NULL)
+        String_destory(node->string);
+
+    node->string = String_create(buf);
 }
 
 struct Line * Line_create() {
