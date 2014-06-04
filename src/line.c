@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <iso646.h>
 
 #include "line.h"
 
