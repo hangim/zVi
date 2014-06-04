@@ -35,7 +35,7 @@ struct Line * Line_create() {
     return line;
 }
 
-Line_node * Line_get_node_by_index(Line *line, int pos) {
+struct Line_node * Line_get_node_by_index(struct Line *line, int pos) {
     if (line == NULL)
         ; // TODO
     if (pos <= 0 or pos > line->size)
@@ -52,7 +52,7 @@ Line_node * Line_get_node_by_index(Line *line, int pos) {
     return p;
 }
 
-void Line_insert(Line *line, Line_node *node, int pos) {
+void Line_insert(struct Line *line, struct Line_node *node, int pos) {
     
     struct Line_node *p = Line_get_node_by_index(line, pos);
     if (p == NULL)
@@ -69,7 +69,7 @@ void Line_insert(Line *line, Line_node *node, int pos) {
     }
 }
 
-void Line_delete(Line *line, int pos) {
+void Line_delete(struct Line *line, int pos) {
     struct Line_node *p, *q;
 
     p = Line_get_node_by_index(line, pos - 1);
