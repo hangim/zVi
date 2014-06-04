@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "line.h"
 
 struct Line_node * Line_create_node() {
