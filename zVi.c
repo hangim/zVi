@@ -41,15 +41,25 @@ void Line_delete(struct Line *line, int pos);
 
 int main(int argc, char const *argv[]) {
 
-    char buf[] = "code is poetry!\n";
+    char buf[10][20];
+    char tmp[] = "code is poetry!\n";
+    for (int i = 0; i < 10; i++) {
+        strncpy(buf[i] + 2, tmp, 20);
+        buf[i][0] = '0' + i;
+        buf[i][1] = ' ';
+        buf[i][19] = '\0';
+    }
+    printf("ok\n");
 
     struct Line *line = Line_create();
 
     for (int i = 0; i < 10; i++) {
         struct Line_node *node = Line_create_node();
-        Line_set_string(node, buf);
-        Line_insert(line, node, 0);
+        Line_set_string(node, buf[i]);
+        Line_insert(line, node, i);
     }
+
+    Line_delete(line, 5);
     
     struct Line_node *p = line->head;
     while (p->next) {
@@ -212,7 +222,7 @@ struct Line_node * Line_get_node_by_index(struct Line *line, int pos) {
     while (p->next->index != pos)
         p = p->next;
 
-    return p;
+    return p->next;
 }
 
 void Line_insert(struct Line *line, struct Line_node *node, int pos) {
@@ -241,7 +251,8 @@ void Line_delete(struct Line *line, int pos) {
 
     q = p->next;
 
-    free(q); // TODO
-
     p->next = q->next;
+
+    free(q); // TODO
+    // TODO update index
 }
