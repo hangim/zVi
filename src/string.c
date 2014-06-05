@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
+#include <iso646.h>
 
 #include "string.h"
 
@@ -55,6 +56,18 @@ void String_print(struct String *head) {
 
     while (p->next) {
         printf("%s", p->next->s);
+        p = p->next;
+    }
+}
+
+void String_write(struct String *head, FILE *fp) {
+    if (head == NULL or fp == NULL)
+        return;
+
+    struct String *p = head;
+
+    while (p->next) {
+        fprintf(fp, "%s", p->next->s);
         p = p->next;
     }
 }

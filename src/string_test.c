@@ -19,6 +19,9 @@ void String_test() {
     
     String_print(s);
 
+    FILE *f = fopen("String_write.out", "w");
+    String_write(s, f);
+
     String_destory(s);
     s = NULL;
 }
