@@ -1,3 +1,6 @@
+#ifndef zVi_VIEW
+#define zVi_VIEW
+
 #include "line.h"
 
 #define VIEW_READ_MAX_SIZE 20
@@ -23,3 +26,5 @@ void View_read(struct View *view, FILE *fp);
 void View_append(struct View *view, struct Line *line);
 void View_append_with_text(struct View *view, char const *buf);
 void View_update_tail(struct View *view);
+
+#endif
