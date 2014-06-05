@@ -6,6 +6,7 @@
 struct View {
     int size;
     struct Line *head;
+    struct Line *tail;
 };
 
 struct View *View_create();
@@ -17,3 +18,6 @@ void View_delete_in_range(struct View *view, int from, int end);
 void View_print(struct View *view);
 void View_destory(struct View *view);
 void View_read(struct View *view, FILE *fp);
+void View_append(struct View *view, struct Line *line);
+void View_append_with_text(struct View *view, char const *buf);
+void View_update_tail(struct View *view);

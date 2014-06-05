@@ -12,7 +12,7 @@ struct View *View_create() {
         exit(1);
     }
 
-    view->head = Line_create();
+    view->head = view->tail = Line_create();
     view->size = 0;
 
     return view;
@@ -53,6 +53,9 @@ void View_insert(struct View *view, struct Line *line, int pos) {
         p->next->index = p->index + 1;
         p = p->next;
     }
+
+    if (pos == view->size)
+        view->tail = line;
 }
 
 void View_insert_with_text(struct View *view, char const *buf, int pos) {
@@ -76,6 +79,9 @@ void View_delete_by_index(struct View *view, int pos) {
         p->next->index = p->index + 1;
         p = p->next;
     }
+
+    if (pos == view->size + 1)
+        View_update_tail(view);
 }
 
 void View_delete_in_range(struct View *view, int from, int end) {
@@ -95,6 +101,9 @@ void View_delete_in_range(struct View *view, int from, int end) {
         p->next->index = p->index + 1;
         p = p->next;
     }
+
+    if (end == view->size + 1)
+        View_update_tail(view);
 }
 
 void View_print(struct View *view) {
@@ -136,8 +145,36 @@ void View_read(struct View *view, FILE *fp) {
 
     while (view->size < VIEW_READ_MAX_SIZE and fgets(buf, ONCE_READ_SIZE, fp) != NULL) {
         buf[ONCE_READ_SIZE] = '\0';
-        View_insert_with_text(view, buf, view->size);
+        View_append_with_text(view, buf);
     }
 
     free(buf);
+}
+
+void View_append(struct View *view, struct Line *line) {
+    if (view == NULL or line == NULL)
+        return;
+
+    struct Line *p = View_get_line_by_index(view, view->size);
+    if (p == NULL)
+        return;
+
+    p->next = line;
+    line->next = NULL;
+    p->next->index = p->index + 1;
+    view->size++;
+}
+
+void View_append_with_text(struct View *view, char const *buf) {
+    if (view == NULL)
+        return;
+    struct Line *line = Line_create_with_text(buf);
+    View_append(view, line);
+}
+
+void View_update_tail(struct View *view) {
+    if (view == NULL)
+        return;
+
+    view->tail = View_get_line_by_index(view, view->size);
 }

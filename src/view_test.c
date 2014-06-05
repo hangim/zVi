@@ -7,7 +7,7 @@ int main() {
     struct View *view;
     view = View_create();
 
-    FILE *f = fopen("view.c", "r");
+    FILE *f = fopen("view_test.c", "r");
 
     View_read(view, f);
     View_print(view);
