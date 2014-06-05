@@ -5,6 +5,7 @@
 
 #include "zVi.h"
 
+void zVi_help();
 void zVi_insert();
 void zVi_delete();
 void zVi_print();
@@ -30,10 +31,10 @@ int main(int argc, char const *argv[]) {
         exit(1);
     }
 
-    view = View_create();
+    view = View_create(f_from, f_to);
 
     // TODO command
-    View_read(view, f_from);
+    View_read(view);
     zVi_print(view);
 
     while (fgets(buf, COMMAND_SIZE, stdin)) {
@@ -57,14 +58,24 @@ int main(int argc, char const *argv[]) {
             case 'q': 
                 zVi_quit();
                 break;
+
+            case 'h':
+                zVi_help();
+
+            default :
+                zVi_help();
         }
     }
 
     return 0;
 }
 
-void zVi_insert() {
+void zVi_help() {
     system("cls");
+    printf("this is help page\n" "\n==>");
+}
+
+void zVi_insert() {
     int pos;
     sscanf(buf + 1, "%d", &pos);
     fgets(buf, COMMAND_SIZE, stdin);
@@ -95,8 +106,8 @@ void zVi_print() {
 
 void zVi_next_page() {
     system("cls");
-    View_write(view, f_to);
-    if (View_read(view, f_from) != 0)
+    View_write(view);
+    if (View_read(view) != 0)
         zVi_print(view);
     else
         printf("file read end\n" "\n==>");
@@ -105,8 +116,8 @@ void zVi_next_page() {
 void zVi_quit() {
     system("cls");
     do {
-        View_write(view, f_to);
-    } while (View_read(view, f_from) != 0);
+        View_write(view);
+    } while (View_read(view) != 0);
 
     if (f_from)
         fclose(f_from);

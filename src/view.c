@@ -5,15 +5,14 @@
 
 #include "view.h"
 
-/*
-void test(struct View *view) {
-    printf("\t\t%dhead \n", view->head->index);
-    printf("\t\t%dtail \n", view->tail->index);
-    printf("\t\t%dcount \n", view->count);
-}
-*/
+FILE *f_from;
+FILE *f_to;
 
-struct View *View_create() {
+
+struct View *View_create(FILE *fp_from, FILE *fp_to) {
+    f_from = fp_from;
+    f_to = fp_to;
+
     struct View *view = (struct View *) malloc(sizeof(struct View));
     if (view == NULL) {
         perror("View_create malloc failed\n");
@@ -66,6 +65,10 @@ void View_insert(struct View *view, struct Line *line, int pos) {
     view->tail = p;
 
     view->count = view->tail->index;
+
+    if (view->count > VIEW_ACTIVE_MAX_LINE) {
+        View_write_first_line(view);
+    }
 }
 
 void View_insert_with_text(struct View *view, char const *buf, int pos) {
@@ -124,29 +127,42 @@ void View_print(struct View *view) {
 
     struct Line *line = view->head;
 
+    int c = 0;
+    char buf[10];
     while (line->next) {
         Line_print(line->next);
         line = line->next;
+        c++;
+        if (c == 20 and line->next) {
+            c = 0;
+            printf("\nnext page?(y/n)\n" "\n==>");
+            while (fgets(buf, 10, stdin)) {
+                if (buf[0] == 'y') {
+                    system("cls");
+                    break;
+                }
+                if (buf[0] == 'n')
+                    return;
+                printf("\nnext page?(y/n)\n" "\n==>");
+            }
+        }
     }
 }
 
-void View_write(struct View *view, FILE *fp) {
-    if (view == NULL or fp == NULL)
+void View_write(struct View *view) {
+    if (view == NULL)
         return;
 
     struct Line *line = view->head;
 
     while (line->next) {
-        Line_write(line->next, fp);
+        Line_write(line->next, f_to);
         line = line->next;
     }
 
     int tmp = view->tail->index;
     View_delete_in_range(view, view->head->index + 1, view->tail->index);
     view->head->index = tmp;
-    // printf("\tcount %d\n", view->count);
-    // printf("\tindex %d\n", view->head->index);
-    // test(view);
 }
 
 void View_clear(struct View *view) {
@@ -172,7 +188,7 @@ void View_destory(struct View *view) {
     free(view);
 }
 
-int View_read(struct View *view, FILE *fp) {
+int View_read(struct View *view) {
     char *buf = (char *) malloc(ONCE_READ_SIZE + 1);
     if (buf == NULL) {
         perror("View_read malloc failed\n");
@@ -180,7 +196,7 @@ int View_read(struct View *view, FILE *fp) {
     }
 
     int count = 0;
-    while (view->size < VIEW_READ_MAX_SIZE and fgets(buf, ONCE_READ_SIZE, fp) != NULL) {
+    while (view->size < VIEW_READ_MAX_LINE and fgets(buf, ONCE_READ_SIZE, f_from) != NULL) {
         buf[ONCE_READ_SIZE] = '\0';
         View_append_with_text(view, buf);
         count++;
@@ -194,7 +210,6 @@ void View_append(struct View *view, struct Line *line) {
     if (view == NULL or line == NULL)
         return;
 
-    // struct Line *p = View_get_line_by_index(view, view->size);
     struct Line *p = view->tail;
     if (p == NULL)
         return;
@@ -212,7 +227,6 @@ void View_append_with_text(struct View *view, char const *buf) {
         return;
     struct Line *line = Line_create_with_text(buf);
     View_append(view, line);
-    // test(view);
 }
 
 void View_update_tail(struct View *view) {
@@ -220,4 +234,15 @@ void View_update_tail(struct View *view) {
         return;
 
     view->tail = View_get_line_by_index(view, view->size);
+}
+
+void View_write_first_line(struct View *view) {
+    if (view == NULL or view->size == 0)
+        return;
+
+    struct Line *tmp = view->head->next;
+    view->head->next = tmp->next;
+    view->head->index = tmp->index;
+    Line_write(tmp, f_to);
+    Line_destory(tmp);
 }
