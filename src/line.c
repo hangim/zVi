@@ -50,6 +50,13 @@ void Line_print(struct Line *line) {
         String_print(line->string);
 }
 
+void Line_write(struct Line *line, FILE *fp) {
+    if (line == NULL or fp == NULL)
+        return;
+
+    String_write(line->string, fp);
+}
+
 void Line_set_index(struct Line *line, int index) {
     if (line == NULL)
         return;

@@ -13,6 +13,10 @@ int main() {
     Line_print(line1);
     Line_print(line2);
 
+    FILE *fp = fopen("line_test.out", "w");
+    Line_write(line1, fp);
+    Line_write(line2, fp);
+
     Line_destory(line1);
     Line_destory(line2);
 

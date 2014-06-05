@@ -14,6 +14,7 @@ void Line_set_text(struct Line *line, char const *buf);
 struct Line *Line_create_with_text(char const *buf);
 void Line_destory(struct Line *line);
 void Line_print(struct Line *line);
+void Line_write(struct Line *line, FILE *fp);
 void Line_set_index(struct Line *line, int index);
 
 #endif
