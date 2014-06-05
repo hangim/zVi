@@ -16,6 +16,8 @@ void View_insert_with_text(struct View *view, char const *buf, int pos);
 void View_delete_by_index(struct View *view, int pos);
 void View_delete_in_range(struct View *view, int from, int end);
 void View_print(struct View *view);
+void View_write(struct View *view, FILE *fp);
+void View_clear(struct View *view);
 void View_destory(struct View *view);
 void View_read(struct View *view, FILE *fp);
 void View_append(struct View *view, struct Line *line);

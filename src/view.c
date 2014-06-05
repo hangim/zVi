@@ -120,6 +120,27 @@ void View_print(struct View *view) {
     }
 }
 
+void View_write(struct View *view, FILE *fp) {
+    if (view == NULL or fp == NULL)
+        return;
+
+    struct Line *line = view->head;
+    if (line == NULL)
+        return;
+
+    while (line->next) {
+        Line_write(line->next, fp);
+        line = line->next;
+    }
+}
+
+void View_clear(struct View *view) {
+    if (view == NULL)
+        return;
+    
+    View_delete_in_range(view, 1, view->size);
+}
+
 void View_destory(struct View *view) {
     if (view == NULL)
         return;
