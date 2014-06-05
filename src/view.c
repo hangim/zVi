@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iso646.h>
+#include <windows.h>
 
 #include "view.h"
 
@@ -69,6 +70,7 @@ void View_delete_by_index(struct View *view, int pos) {
     struct Line *tmp = p->next;
     p->next = tmp->next;
     Line_destory(tmp);
+    view->size--;
 
     while (p->next) {
         p->next->index = p->index + 1;
@@ -86,6 +88,7 @@ void View_delete_in_range(struct View *view, int from, int end) {
         tmp = p->next;
         p->next = tmp->next;
         Line_destory(tmp);
+        view->size--;
     }
 
     while (p->next) {
@@ -122,4 +125,19 @@ void View_destory(struct View *view) {
     }
 
     free(view);
+}
+
+void View_read(struct View *view, FILE *fp) {
+    char *buf = (char *) malloc(ONCE_READ_SIZE + 1);
+    if (buf == NULL) {
+        perror("View_read malloc failed\n");
+        exit(1);
+    }
+
+    while (view->size < VIEW_READ_MAX_SIZE and fgets(buf, ONCE_READ_SIZE, fp) != NULL) {
+        buf[ONCE_READ_SIZE] = '\0';
+        View_insert_with_text(view, buf, view->size);
+    }
+
+    free(buf);
 }

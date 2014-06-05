@@ -1,5 +1,8 @@
 #include "line.h"
 
+#define VIEW_READ_MAX_SIZE 20
+#define ONCE_READ_SIZE 320
+
 struct View {
     int size;
     struct Line *head;
@@ -13,3 +16,4 @@ void View_delete_by_index(struct View *view, int pos);
 void View_delete_in_range(struct View *view, int from, int end);
 void View_print(struct View *view);
 void View_destory(struct View *view);
+void View_read(struct View *view, FILE *fp);
