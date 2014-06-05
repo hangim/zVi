@@ -5,6 +5,14 @@
 
 #include "view.h"
 
+/*
+void test(struct View *view) {
+    printf("\t\t%dhead \n", view->head->index);
+    printf("\t\t%dtail \n", view->tail->index);
+    printf("\t\t%dcount \n", view->count);
+}
+*/
+
 struct View *View_create() {
     struct View *view = (struct View *) malloc(sizeof(struct View));
     if (view == NULL) {
@@ -14,6 +22,7 @@ struct View *View_create() {
 
     view->head = view->tail = Line_create();
     view->size = 0;
+    view->count = 0;
 
     return view;
 }
@@ -22,12 +31,12 @@ struct Line *View_get_line_by_index(struct View *view, int pos) {
     if (view == NULL)
         return NULL;
 
-    if (pos < 0 or pos > view->size)
+    if (pos < view->head->index or pos > view->tail->index)
         return NULL;
 
     struct Line *line = view->head;
 
-    if (pos == 0)
+    if (pos == line->index)
         return line;
 
     while (line->next->index != pos)
@@ -54,8 +63,9 @@ void View_insert(struct View *view, struct Line *line, int pos) {
         p = p->next;
     }
 
-    if (pos == view->size)
-        view->tail = line;
+    view->tail = p;
+
+    view->count = view->tail->index;
 }
 
 void View_insert_with_text(struct View *view, char const *buf, int pos) {
@@ -66,7 +76,7 @@ void View_insert_with_text(struct View *view, char const *buf, int pos) {
 }
 
 void View_delete_by_index(struct View *view, int pos) {
-    if (view == NULL or pos <= 0 or pos > view->size)
+    if (view == NULL or pos <= view->head->index or pos > view->tail->index)
         return;
 
     struct Line *p = View_get_line_by_index(view, pos - 1);
@@ -80,12 +90,13 @@ void View_delete_by_index(struct View *view, int pos) {
         p = p->next;
     }
 
-    if (pos == view->size + 1)
-        View_update_tail(view);
+    view->tail = p;
+    
+    view->count = view->tail->index;
 }
 
 void View_delete_in_range(struct View *view, int from, int end) {
-    if (view == NULL or from <= 0 or end > view->size or from > end)
+    if (view == NULL or from > end)
         return;
 
     struct Line *p = View_get_line_by_index(view, from - 1);
@@ -102,8 +113,9 @@ void View_delete_in_range(struct View *view, int from, int end) {
         p = p->next;
     }
 
-    if (end == view->size + 1)
-        View_update_tail(view);
+    view->tail = p;
+
+    view->count = view->tail->index;
 }
 
 void View_print(struct View *view) {
@@ -111,8 +123,6 @@ void View_print(struct View *view) {
         return;
 
     struct Line *line = view->head;
-    if (line == NULL)
-        return;
 
     while (line->next) {
         Line_print(line->next);
@@ -125,20 +135,25 @@ void View_write(struct View *view, FILE *fp) {
         return;
 
     struct Line *line = view->head;
-    if (line == NULL)
-        return;
 
     while (line->next) {
         Line_write(line->next, fp);
         line = line->next;
     }
+
+    int tmp = view->tail->index;
+    View_delete_in_range(view, view->head->index + 1, view->tail->index);
+    view->head->index = tmp;
+    // printf("\tcount %d\n", view->count);
+    // printf("\tindex %d\n", view->head->index);
+    // test(view);
 }
 
 void View_clear(struct View *view) {
     if (view == NULL)
         return;
     
-    View_delete_in_range(view, 1, view->size);
+    View_delete_in_range(view, view->head->index + 1, view->tail->index);
 }
 
 void View_destory(struct View *view) {
@@ -157,33 +172,39 @@ void View_destory(struct View *view) {
     free(view);
 }
 
-void View_read(struct View *view, FILE *fp) {
+int View_read(struct View *view, FILE *fp) {
     char *buf = (char *) malloc(ONCE_READ_SIZE + 1);
     if (buf == NULL) {
         perror("View_read malloc failed\n");
         exit(1);
     }
 
+    int count = 0;
     while (view->size < VIEW_READ_MAX_SIZE and fgets(buf, ONCE_READ_SIZE, fp) != NULL) {
         buf[ONCE_READ_SIZE] = '\0';
         View_append_with_text(view, buf);
+        count++;
     }
 
     free(buf);
+    return count;
 }
 
 void View_append(struct View *view, struct Line *line) {
     if (view == NULL or line == NULL)
         return;
 
-    struct Line *p = View_get_line_by_index(view, view->size);
+    // struct Line *p = View_get_line_by_index(view, view->size);
+    struct Line *p = view->tail;
     if (p == NULL)
         return;
-
     p->next = line;
     line->next = NULL;
     p->next->index = p->index + 1;
     view->size++;
+
+    view->tail = line;
+    view->count = view->tail->index;
 }
 
 void View_append_with_text(struct View *view, char const *buf) {
@@ -191,6 +212,7 @@ void View_append_with_text(struct View *view, char const *buf) {
         return;
     struct Line *line = Line_create_with_text(buf);
     View_append(view, line);
+    // test(view);
 }
 
 void View_update_tail(struct View *view) {

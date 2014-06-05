@@ -8,6 +8,7 @@
 
 struct View {
     int size;
+    int count;
     struct Line *head;
     struct Line *tail;
 };
@@ -22,7 +23,7 @@ void View_print(struct View *view);
 void View_write(struct View *view, FILE *fp);
 void View_clear(struct View *view);
 void View_destory(struct View *view);
-void View_read(struct View *view, FILE *fp);
+int View_read(struct View *view, FILE *fp);
 void View_append(struct View *view, struct Line *line);
 void View_append_with_text(struct View *view, char const *buf);
 void View_update_tail(struct View *view);
