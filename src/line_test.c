@@ -2,20 +2,19 @@
 
 #include "line.h"
 
-/*
-struct Line *Line_create();
-void Line_set_text(struct Line *line, char const *buf);
-struct Line *Line_create_with_text(char const *buf);
-void Line_delete(struct Line *line);
-*/
-
 int main() {
 
-    struct Line *line = Line_create();
+    struct Line *line1 = Line_create_with_text("hello world\n");
+    struct Line *line2 = Line_create_with_text("code is poetry\n");
 
-    printf("%d\n", line->index);
+    Line_set_index(line1, 1);
+    Line_set_index(line2, 2);
 
-    Line_delete(line);
+    Line_print(line1);
+    Line_print(line2);
+
+    Line_destory(line1);
+    Line_destory(line2);
 
     return 0;
 }

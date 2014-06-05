@@ -34,7 +34,24 @@ struct Line *Line_create_with_text(char const *buf) {
     return line;
 }
 
-void Line_delete(struct Line *line) {
+void Line_destory(struct Line *line) {
     String_destory(line->string);
     free(line);
+}
+
+void Line_print(struct Line *line) {
+    if (line == NULL)
+        return;
+
+    printf("%2d: ", line->index);
+    if (line->string == NULL)
+        printf("\n"); // TODO
+    else
+        String_print(line->string);
+}
+
+void Line_set_index(struct Line *line, int index) {
+    if (line == NULL)
+        return;
+    line->index = index;
 }
