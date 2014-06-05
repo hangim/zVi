@@ -17,7 +17,7 @@ void String_test() {
     struct String *s;
     s = String_create(buf);
     
-    String_output(s);
+    String_print(s);
 
     String_destory(s);
     s = NULL;

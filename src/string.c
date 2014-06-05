@@ -47,7 +47,7 @@ struct String *String_create(char const *buf) {
     return head;
 }
 
-void String_output(struct String *head) {
+void String_print(struct String *head) {
     if (head == NULL)
         return;
 

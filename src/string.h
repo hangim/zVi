@@ -10,7 +10,7 @@ struct String {
 
 struct String *String_create_node(char const *buf);
 struct String *String_create(char const *buf);
-void String_output(struct String *head);
+void String_print(struct String *head);
 void String_destory(struct String *head);
 
 #endif
