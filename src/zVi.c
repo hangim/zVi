@@ -35,7 +35,7 @@ int main(int argc, char const *argv[]) {
 
     // TODO command
     View_read(view);
-    zVi_print(view);
+    zVi_help();
 
     while (fgets(buf, COMMAND_SIZE, stdin)) {
         switch (buf[0]) {
@@ -72,7 +72,31 @@ int main(int argc, char const *argv[]) {
 
 void zVi_help() {
     system("cls");
-    printf("this is help page\n" "\n==>");
+    printf(
+        "zVi\n"
+        "===\n"
+        "a simple text edit program\n\n"
+
+        "usage:\n"
+        "---\n"
+        "zVi input output\n\n"
+
+        "command:\n"
+        "---\n"
+        "i <行号> <回车> <文本> <回车>\n"
+        "\t将<文本>插入活区中第<行号>行之后。\n\n"
+
+        "d <行号1> [<空格> <行号2> ] <回车>\n"
+        "\t删除活区中第<行号1>行（到<行号2>行）\n\n"
+
+        "n <回车>\n"
+        "\t将活区写入输出文件，并从输入文件中读入下一段，作为新的活区。\n\n"
+
+        "p <回车>\n"
+        "\t逐页（每页20行）显示活区内容\n"
+
+        "\n==>"
+        );
 }
 
 void zVi_insert() {
@@ -110,7 +134,7 @@ void zVi_next_page() {
     if (View_read(view) != 0)
         zVi_print(view);
     else
-        printf("file read end\n" "\n==>");
+        printf("文件已读取完毕\n" "\n==>");
 }
 
 void zVi_quit() {
