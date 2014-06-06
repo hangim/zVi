@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <iso646.h>
 #include <windows.h>
+#include <conio.h>
 
 #include "view.h"
 
@@ -128,22 +129,17 @@ void View_print(struct View *view) {
     struct Line *line = view->head;
 
     int c = 0;
-    char buf[10];
     while (line->next) {
         Line_print(line->next);
         line = line->next;
         c++;
         if (c == 20 and line->next) {
             c = 0;
-            printf("\nnext page?(y/n)\n" "\n==>");
-            while (fgets(buf, 10, stdin)) {
-                if (buf[0] == 'y') {
-                    system("cls");
-                    break;
-                }
-                if (buf[0] == 'n')
-                    return;
-                printf("\nnext page?(y/n)\n" "\n==>");
+            printf("\n-- More --");
+            if (getch() == 'q') {
+                return;
+            } else {
+                system("cls");
             }
         }
     }

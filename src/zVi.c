@@ -81,7 +81,7 @@ void zVi_insert() {
     fgets(buf, COMMAND_SIZE, stdin);
     buf[COMMAND_SIZE] = '\0';
     View_insert_with_text(view, buf, pos);
-    View_print(view);
+    zVi_print(view);
 }
 
 void zVi_delete() {
