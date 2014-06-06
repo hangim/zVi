@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <iso646.h>
+#include <conio.h>
 
 #include "zVi.h"
 
@@ -18,6 +19,8 @@ struct View *view;
 char buf[COMMAND_SIZE + 1];
 
 int main(int argc, char const *argv[]) {
+    system("title=zVi");
+    system("color 0e");
 
     if (argc != 3) {
         printf("usage: zVi input output\n");
@@ -61,9 +64,10 @@ int main(int argc, char const *argv[]) {
 
             case 'h':
                 zVi_help();
+                break;
 
-            default :
-                zVi_help();
+            default:
+                printf("==>");
         }
     }
 
@@ -77,23 +81,25 @@ void zVi_help() {
         "===\n"
         "a simple text edit program\n\n"
 
-        "usage:\n"
-        "---\n"
-        "zVi input output\n\n"
-
         "command:\n"
         "---\n"
         "i <行号> <回车> <文本> <回车>\n"
-        "\t将<文本>插入活区中第<行号>行之后。\n\n"
+        "\t将<文本>插入活区中第<行号>行之后。\n"
 
         "d <行号1> [<空格> <行号2> ] <回车>\n"
-        "\t删除活区中第<行号1>行（到<行号2>行）\n\n"
+        "\t删除活区中第<行号1>行（到<行号2>行）\n"
 
         "n <回车>\n"
-        "\t将活区写入输出文件，并从输入文件中读入下一段，作为新的活区。\n\n"
+        "\t将活区写入输出文件，并从输入文件中读入下一段，作为新的活区。\n"
 
         "p <回车>\n"
         "\t逐页（每页20行）显示活区内容\n"
+
+        "q <回车>\n"
+        "\t保存并退出\n"
+
+        "h <回车>\n"
+        "\t查看帮助\n"
 
         "\n==>"
         );
@@ -133,8 +139,11 @@ void zVi_next_page() {
     View_write(view);
     if (View_read(view) != 0)
         zVi_print(view);
-    else
-        printf("文件已读取完毕\n" "\n==>");
+    else {
+        printf("文件已读取完毕, 按任意键退出\n");
+        getch();
+        zVi_quit();
+    }
 }
 
 void zVi_quit() {
@@ -142,11 +151,14 @@ void zVi_quit() {
     do {
         View_write(view);
     } while (View_read(view) != 0);
+    View_destory(view);
 
     if (f_from)
         fclose(f_from);
     if (f_to)
         fclose(f_to);
 
+    system("color 07");
+    system("title=命令提示符");
     exit(0);
 }
