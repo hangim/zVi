@@ -1,3 +1,13 @@
+/******************************************************************************
+ *
+ * Filename:
+ *  string.c
+ *
+ * Description:
+ *  字符块链表相关
+ *
+ ******************************************************************************/
+
 #include <iso646.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,6 +16,15 @@
 
 #include "string.h"
 
+/******************************************************************************
+ *
+ * Function:
+ *  String_create_node
+ *
+ * Description:
+ *  创建一个字符块节点
+ *
+ ******************************************************************************/
 struct String *String_create_node(const char * const buf) {
     struct String *s = (struct String *) malloc(sizeof(struct String));
     if (s == NULL) {
@@ -30,6 +49,15 @@ struct String *String_create_node(const char * const buf) {
     return s;
 }
 
+/******************************************************************************
+ *
+ * Function:
+ *  String_create
+ *
+ * Description:
+ *  创建一个字符块链表
+ *
+ ******************************************************************************/
 struct String *String_create(const char *buf) {
     if (buf == NULL)
         return NULL;
@@ -48,6 +76,15 @@ struct String *String_create(const char *buf) {
     return head;
 }
 
+/******************************************************************************
+ *
+ * Function:
+ *  String_print
+ *
+ * Description:
+ *  将一个字符块链表打印输出
+ *
+ ******************************************************************************/
 void String_print(const struct String * const head) {
     if (head == NULL)
         return;
@@ -60,6 +97,15 @@ void String_print(const struct String * const head) {
     }
 }
 
+/******************************************************************************
+ *
+ * Function:
+ *  String_write
+ *
+ * Description:
+ *  将一个字符块链表输出到文件
+ *
+ ******************************************************************************/
 void String_write(const struct String * const head, FILE * const fp) {
     if (head == NULL or fp == NULL)
         return;
@@ -72,6 +118,15 @@ void String_write(const struct String * const head, FILE * const fp) {
     }
 }
 
+/******************************************************************************
+ *
+ * Function:
+ *  String_destory
+ *
+ * Description:
+ *  销毁一个字符块链表
+ *
+ ******************************************************************************/
 void String_destory(struct String * const head) {
     if (head == NULL)
         return;
