@@ -24,6 +24,22 @@
  * Description:
  *  创建一个视图
  *
+ * Params:
+ *  fp_from
+ *      输入文件
+ *
+ *  fp_to:
+ *      输出文件
+ *
+ * Input:
+ *  无
+ *
+ * Output:
+ *  无
+ *
+ * Return:
+ *  无
+ *
  ******************************************************************************/
 struct View *View_create(FILE * const fp_from, FILE * const fp_to) {
     if (fp_from == NULL or fp_to == NULL)
@@ -53,6 +69,21 @@ struct View *View_create(FILE * const fp_from, FILE * const fp_to) {
  * Description:
  *  通过行号取得一行
  *
+ * Params:
+ *  view:
+ *      视图指针
+ *  pos:
+ *      行号
+ *
+ * Input:
+ *  无
+ *
+ * Output:
+ *  无
+ *
+ * Return:
+ *  无
+ *
  ******************************************************************************/
 struct Line *View_get_line_by_index(const struct View * const view, const int pos) {
     if (view == NULL)
@@ -77,6 +108,19 @@ struct Line *View_get_line_by_index(const struct View * const view, const int po
  * Description:
  *  更新指向最后一行的指针
  *
+ * Params:
+ *  view:
+ *      视图指针
+ *
+ * Input:
+ *  无
+ *
+ * Output:
+ *  无
+ *
+ * Return:
+ *  无
+ *
  ******************************************************************************/
 void View_update_tail(struct View * const view) {
     if (view == NULL)
@@ -92,6 +136,21 @@ void View_update_tail(struct View * const view) {
  *
  * Description:
  *  在最后插入一行
+ *
+ * Params:
+ *  view:
+ *      视图指针
+ *  line:
+ *      行指针
+ *
+ * Input:
+ *  无
+ *
+ * Output:
+ *  无
+ *
+ * Return:
+ *  无
  *
  ******************************************************************************/
 void View_append(struct View * const view, struct Line * const line) {
@@ -117,6 +176,21 @@ void View_append(struct View * const view, struct Line * const line) {
  * Description:
  *  在最后插入一行，并添加行文本
  *
+ * Params:
+ *  view:
+ *      视图指针
+ *  buf:
+ *      文本缓冲区
+ *
+ * Input:
+ *  无
+ *
+ * Output:
+ *  无
+ *
+ * Return:
+ *  无
+ *
  ******************************************************************************/
 void View_append_with_text(struct View * const view, const char *buf) {
     if (view == NULL or buf == NULL)
@@ -132,6 +206,23 @@ void View_append_with_text(struct View * const view, const char *buf) {
  *
  * Description:
  *  插入一行
+ *
+ * Params:
+ *  view:
+ *      视图指针
+ *  line:
+ *      行指针
+ *  pos:
+ *      行号
+ *
+ * Input:
+ *  无
+ *
+ * Output:
+ *  无
+ *
+ * Return:
+ *  无
  *
  ******************************************************************************/
 void View_insert(struct View * const view, struct Line * const line, const int pos) {
@@ -168,6 +259,23 @@ void View_insert(struct View * const view, struct Line * const line, const int p
  * Description:
  *  插入一行，并设置行文本
  *
+ * Params:
+ *  view:
+ *      视图指针
+ *  buf:
+ *      文本缓冲区
+ *  pos:
+ *      行号
+ *
+ * Input:
+ *  无
+ *
+ * Output:
+ *  无
+ *
+ * Return:
+ *  无
+ *
  ******************************************************************************/
 void View_insert_with_text(struct View * const view, const char *buf, const int pos) {
     if (view == NULL or buf == NULL or pos < view->head->index or pos > view->tail->index)
@@ -184,6 +292,21 @@ void View_insert_with_text(struct View * const view, const char *buf, const int 
  *
  * Description:
  *  删除一行
+ *
+ * Params:
+ *  view:
+ *      视图指针
+ *  pos:
+ *      行号
+ *
+ * Input:
+ *  无
+ *
+ * Output:
+ *  无
+ *
+ * Return:
+ *  无
  *
  ******************************************************************************/
 void View_delete_by_index(struct View * const view, const int pos) {
@@ -212,6 +335,23 @@ void View_delete_by_index(struct View * const view, const int pos) {
  *
  * Description:
  *  删除多行
+ *
+ * Params:
+ *  view:
+ *      视图指针
+ *  from:
+ *      起始行号
+ *  end:
+ *      末尾行号
+ *
+ * Input:
+ *  无
+ *
+ * Output:
+ *  无
+ *
+ * Return:
+ *  无
  *
  ******************************************************************************/
 void View_delete_in_range(struct View * const view, const int from, const int end) {
@@ -243,6 +383,19 @@ void View_delete_in_range(struct View * const view, const int from, const int en
  *
  * Description:
  *  打印输出整个视图
+ *
+ * Params:
+ *  view:
+ *      视图指针
+ *
+ * Input:
+ *  无
+ *
+ * Output:
+ *  打印视图文本
+ *
+ * Return:
+ *  无
  *
  ******************************************************************************/
 void View_print(const struct View * const view) {
@@ -276,6 +429,19 @@ void View_print(const struct View * const view) {
  * Description:
  *  从文件读入文本
  *
+ * Params:
+ *  view:
+ *      视图指针
+ *
+ * Input:
+ *  从文件读入文本
+ *
+ * Output:
+ *  无
+ *
+ * Return:
+ *  无
+ *
  ******************************************************************************/
 int View_read(struct View * const view) {
     char *buf = (char *) malloc(ONCE_READ_SIZE + 1);
@@ -303,6 +469,19 @@ int View_read(struct View * const view) {
  * Description:
  *  将文本写入文件
  *
+ * Params:
+ *  view:
+ *      视图指针
+ *
+ * Input:
+ *  无
+ *
+ * Output:
+ *  输出视图文本到文件
+ *
+ * Return:
+ *  无
+ *
  ******************************************************************************/
 void View_write(struct View * const view) {
     if (view == NULL)
@@ -328,6 +507,19 @@ void View_write(struct View * const view) {
  * Description:
  *  将第一行写入文件
  *
+ * Params:
+ *  view：
+ *      视图指针
+ *
+ * Input:
+ *  无
+ *
+ * Output:
+ *  输出第一行到文件
+ *
+ * Return:
+ *  无
+ *
  ******************************************************************************/
 void View_write_first_line(struct View * const view) {
     if (view == NULL or view->size == 0)
@@ -351,6 +543,19 @@ void View_write_first_line(struct View * const view) {
  * Description:
  *  清空视图
  *
+ * Params:
+ *  view:
+ *      视图指针
+ *
+ * Input:
+ *  无
+ *
+ * Output:
+ *  无
+ *
+ * Return:
+ *  无
+ *
  ******************************************************************************/
 void View_clear(struct View * const view) {
     if (view == NULL)
@@ -366,6 +571,19 @@ void View_clear(struct View * const view) {
  *
  * Description:
  *  销毁视图
+ *
+ * Params:
+ *  view:
+ *      视图指针
+ *
+ * Input:
+ *  无
+ *
+ * Output:
+ *  无
+ *
+ * Return:
+ *  无
  *
  ******************************************************************************/
 void View_destory(struct View * const view) {

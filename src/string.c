@@ -24,6 +24,19 @@
  * Description:
  *  创建一个字符块节点
  *
+ * Params:
+ *  buf:
+ *      文本缓冲区
+ *
+ * INPUT:
+ *  无
+ *
+ * Output:
+ *  无
+ *
+ * Return:
+ *  字符块节点指针
+ *
  ******************************************************************************/
 struct String *String_create_node(const char * const buf) {
     struct String *s = (struct String *) malloc(sizeof(struct String));
@@ -57,6 +70,19 @@ struct String *String_create_node(const char * const buf) {
  * Description:
  *  创建一个字符块链表
  *
+ * Params:
+ *  buf:
+ *      文本缓冲区
+ *
+ * Input:
+ *  无
+ *
+ * Output:
+ *  无
+ *
+ * Return:
+ *  字符块链表指针
+ *
  ******************************************************************************/
 struct String *String_create(const char *buf) {
     if (buf == NULL)
@@ -84,6 +110,19 @@ struct String *String_create(const char *buf) {
  * Description:
  *  将一个字符块链表打印输出
  *
+ * Params:
+ *  head:
+ *      字符块指针
+ *
+ * Input:
+ *  无
+ *
+ * Output:
+ *  字符块文本
+ *
+ * Return:
+ *  无
+ *
  ******************************************************************************/
 void String_print(const struct String * const head) {
     if (head == NULL)
@@ -105,6 +144,21 @@ void String_print(const struct String * const head) {
  * Description:
  *  将一个字符块链表输出到文件
  *
+ * Params:
+ *  head:
+ *      字符块指针
+ *  fp:
+ *      代输出文件
+ *
+ * Input:
+ *  无
+ *
+ * Output:
+ *  输出字符块文本到文件
+ *
+ * Return:
+ *  无
+ *
  ******************************************************************************/
 void String_write(const struct String * const head, FILE * const fp) {
     if (head == NULL or fp == NULL)
@@ -125,6 +179,19 @@ void String_write(const struct String * const head, FILE * const fp) {
  *
  * Description:
  *  销毁一个字符块链表
+ *
+ * Params:
+ *  head:
+ *      字符块指针
+ *
+ * Input:
+ *  无
+ *
+ * Output:
+ *  无
+ *
+ * Return:
+ *  无
  *
  ******************************************************************************/
 void String_destory(struct String * const head) {
