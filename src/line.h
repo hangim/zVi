@@ -10,11 +10,11 @@ struct Line {
 };
 
 struct Line *Line_create();
-void Line_set_text(struct Line *line, char const *buf);
-struct Line *Line_create_with_text(char const *buf);
-void Line_destory(struct Line *line);
-void Line_print(struct Line *line);
-void Line_write(struct Line *line, FILE *fp);
-void Line_set_index(struct Line *line, int index);
+void Line_set_index(struct Line * const line, const int index);
+void Line_set_text(struct Line * const line, const char *buf);
+struct Line *Line_create_with_text(const char *buf);
+void Line_print(const struct Line * const line);
+void Line_write(const struct Line * const line, FILE * const fp);
+void Line_destory(struct Line * const line);
 
 #endif

@@ -6,18 +6,6 @@
 
 #include "zVi.h"
 
-void zVi_help();
-void zVi_insert();
-void zVi_delete();
-void zVi_print();
-void zVi_next_page();
-void zVi_quit();
-
-FILE *f_from;
-FILE *f_to;
-struct View *view;
-char buf[COMMAND_SIZE + 1];
-
 int main(int argc, char const *argv[]) {
     system("title=zVi");
     system("color 0e");
@@ -26,6 +14,8 @@ int main(int argc, char const *argv[]) {
         printf("usage: zVi input output\n");
         exit(0);
     }
+
+    atexit(zVi_quit);
 
     f_from = fopen(argv[1], "r");
     f_to = fopen(argv[2], "w");
@@ -59,7 +49,7 @@ int main(int argc, char const *argv[]) {
                 break;
         
             case 'q': 
-                zVi_quit();
+                exit(0);
                 break;
 
             case 'h':
@@ -142,16 +132,19 @@ void zVi_next_page() {
     else {
         printf("文件已读取完毕, 按任意键退出\n");
         getch();
-        zVi_quit();
+        exit(0);
     }
 }
 
 void zVi_quit() {
     system("cls");
-    do {
-        View_write(view);
-    } while (View_read(view) != 0);
-    View_destory(view);
+
+    if (view) {
+        do {
+            View_write(view);
+        } while (View_read(view) != 0);
+        View_destory(view);
+    }
 
     if (f_from)
         fclose(f_from);
@@ -160,5 +153,4 @@ void zVi_quit() {
 
     system("color 07");
     system("title=命令提示符");
-    exit(0);
 }

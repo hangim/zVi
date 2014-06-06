@@ -1,12 +1,12 @@
+#include <iso646.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
-#include <iso646.h>
 
 #include "string.h"
 
-struct String *String_create_node(char const *buf) {
+struct String *String_create_node(const char * const buf) {
     struct String *s = (struct String *) malloc(sizeof(struct String));
     if (s == NULL) {
         perror("String_create_node malloc failed\n");
@@ -30,7 +30,7 @@ struct String *String_create_node(char const *buf) {
     return s;
 }
 
-struct String *String_create(char const *buf) {
+struct String *String_create(const char *buf) {
     if (buf == NULL)
         return NULL;
 
@@ -48,11 +48,11 @@ struct String *String_create(char const *buf) {
     return head;
 }
 
-void String_print(struct String *head) {
+void String_print(const struct String * const head) {
     if (head == NULL)
         return;
 
-    struct String *p = head;
+    struct String const *p = head;
 
     while (p->next) {
         printf("%s", p->next->s);
@@ -60,11 +60,11 @@ void String_print(struct String *head) {
     }
 }
 
-void String_write(struct String *head, FILE *fp) {
+void String_write(const struct String * const head, FILE * const fp) {
     if (head == NULL or fp == NULL)
         return;
 
-    struct String *p = head;
+    struct String const *p = head;
 
     while (p->next) {
         fprintf(fp, "%s", p->next->s);
@@ -72,7 +72,7 @@ void String_write(struct String *head, FILE *fp) {
     }
 }
 
-void String_destory(struct String *head) {
+void String_destory(struct String * const head) {
     if (head == NULL)
         return;
 

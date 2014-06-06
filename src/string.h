@@ -8,10 +8,10 @@ struct String {
     struct String *next;
 };
 
-struct String *String_create_node(char const *buf);
-struct String *String_create(char const *buf);
-void String_print(struct String *head);
-void String_write(struct String *head, FILE *fp);
-void String_destory(struct String *head);
+struct String *String_create_node(const char * const buf);
+struct String *String_create(const char *buf);
+void String_print(const struct String * const head);
+void String_write(const struct String * const head, FILE * const fp);
+void String_destory(struct String * const head);
 
 #endif

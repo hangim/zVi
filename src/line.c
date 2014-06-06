@@ -1,7 +1,7 @@
-#include <stdlib.h>
 #include <iso646.h>
-#include <windows.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <windows.h>
 
 #include "line.h"
 
@@ -19,7 +19,13 @@ struct Line *Line_create() {
     return line;
 }
 
-void Line_set_text(struct Line *line, char const *buf) {
+void Line_set_index(struct Line * const line, const int index) {
+    if (line == NULL)
+        return;
+    line->index = index;
+}
+
+void Line_set_text(struct Line * const line, const char *buf) {
     if (line == NULL)
         return;
 
@@ -27,38 +33,32 @@ void Line_set_text(struct Line *line, char const *buf) {
     line->string = String_create(buf);
 }
 
-struct Line *Line_create_with_text(char const *buf) {
+struct Line *Line_create_with_text(const char *buf) {
     struct Line *line = Line_create();
     Line_set_text(line, buf);
 
     return line;
 }
 
-void Line_destory(struct Line *line) {
-    String_destory(line->string);
-    free(line);
-}
-
-void Line_print(struct Line *line) {
+void Line_print(const struct Line * const line) {
     if (line == NULL)
         return;
 
-    printf("%2d: ", line->index);
+    printf("%4d ", line->index);
     if (line->string == NULL)
-        printf("\n"); // TODO
+        printf("\n");
     else
         String_print(line->string);
 }
 
-void Line_write(struct Line *line, FILE *fp) {
+void Line_write(const struct Line * const line, FILE * const fp) {
     if (line == NULL or fp == NULL)
         return;
 
     String_write(line->string, fp);
 }
 
-void Line_set_index(struct Line *line, int index) {
-    if (line == NULL)
-        return;
-    line->index = index;
+void Line_destory(struct Line * const line) {
+    String_destory(line->string);
+    free(line);
 }

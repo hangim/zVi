@@ -2,6 +2,15 @@
 
 #include "string.h"
 
+void String_test();
+
+int main() {
+
+    String_test();
+
+    return 0;
+}
+
 void String_test() {
     char buf[] = "hello world " "hello world " "hello world " "hello world " "hello world\n"
         "hello world " "hello world " "hello world " "hello world " "hello world\n"
@@ -24,11 +33,4 @@ void String_test() {
 
     String_destory(s);
     s = NULL;
-}
-
-int main() {
-
-    String_test();
-
-    return 0;
 }
