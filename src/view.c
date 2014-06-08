@@ -163,7 +163,7 @@ void View_append(struct View * const view, struct Line * const line) {
     view->size++;
     view->count = view->tail->index;
 
-    if (view->count > VIEW_ACTIVE_MAX_LINE) {
+    if (view->size > VIEW_ACTIVE_MAX_LINE) {
         View_write_first_line(view);
     }
 }
@@ -246,7 +246,7 @@ void View_insert(struct View * const view, struct Line * const line, const int p
     view->size++;
     view->count = view->tail->index;
 
-    if (view->count > VIEW_ACTIVE_MAX_LINE) {
+    if (view->size > VIEW_ACTIVE_MAX_LINE) {
         View_write_first_line(view);
     }
 }
@@ -494,9 +494,9 @@ void View_write(struct View * const view) {
         line = line->next;
     }
 
-    int tmp = view->tail->index;
+    int tmp = view->count;
     View_delete_in_range(view, view->head->index + 1, view->tail->index);
-    view->head->index = tmp;
+    view->count = view->head->index = tmp;
 }
 
 /******************************************************************************
